@@ -1,0 +1,3 @@
+PageProps keys: ['_nextI18Next', 'getLayoutProps', 'audioVersionInfo', 'chapterInfo', 'locale', 'parallelChapterInfoData', 'parallelVersionData', 'type', 'usfm', 'versionData', 'versionId']
+chapterInfoData NOT found.
+parallelChapterInfoData content present: True
