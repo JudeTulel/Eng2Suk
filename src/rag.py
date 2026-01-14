@@ -31,8 +31,24 @@ class PokotRAG:
             print("No documents to index.")
             return
 
-        print(f"Indexing {len(documents)} documents...")
-        texts = [doc['pokot'] for doc in documents]
+        # Filter out invalid documents (e.g. NaNs)
+        valid_documents = []
+        for doc in documents:
+            pokot_text = doc.get('pokot')
+            english_text = doc.get('english')
+            
+            if isinstance(pokot_text, str) and isinstance(english_text, str) and pokot_text.strip() and english_text.strip():
+                valid_documents.append(doc)
+            else:
+                # Optional: Log skipped documents if needed
+                pass
+        
+        if not valid_documents:
+            print("No valid documents found to index after filtering.")
+            return
+
+        print(f"Indexing {len(valid_documents)} valid documents (out of {len(documents)} total)...")
+        texts = [doc['pokot'] for doc in valid_documents]
         
         print("Generating embeddings for Pokot verses...")
         embeddings = self.model.encode(texts, show_progress_bar=True, batch_size=32)
@@ -48,7 +64,7 @@ class PokotRAG:
                     "reference": f"{doc.get('book', 'N/A')} {doc.get('chapter', 'N/A')}:{doc.get('verse', 'N/A')}"
                 }
             )
-            for idx, doc in enumerate(tqdm(documents, desc="Upserting points"))
+            for idx, doc in enumerate(tqdm(valid_documents, desc="Upserting points"))
         ]
 
         self.client.upsert(

@@ -25,6 +25,12 @@ def upload_csv_to_firestore(csv_path, project_id):
     print(f"Reading CSV from {csv_path}...")
     try:
         df = pd.read_csv(csv_path)
+        # Drop rows where critical fields are missing
+        initial_count = len(df)
+        df = df.dropna(subset=['pokot', 'english'])
+        final_count = len(df)
+        if initial_count != final_count:
+            print(f"Dropped {initial_count - final_count} rows with missing text data.")
     except Exception as e:
         print(f"Error reading CSV: {e}")
         return
