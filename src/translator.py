@@ -11,7 +11,7 @@ class PokotTranslator:
         # Initialize Vertex AI
         vertexai.init(project=project_id, location=location)
         # Use the newer, stable model version
-        self.model = GenerativeModel("gemini-1.5-flash-002")
+        self.model = GenerativeModel("gemini-2.5-flash")
         self.rag = rag_system if rag_system else PokotRAG()
         
     def construct_prompt(self, pokot_text, context_verses):
